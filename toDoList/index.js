@@ -2,9 +2,35 @@ let add = document.getElementById("add");
 
 let ul = document.querySelector("ul");
 
+function loadItems(){
+    const items= JSON.parse(localStorage.getItem("items"))||[];
+    items.forEach(item=>{
+        createList(item.text);
+    })
+}
+
 function deleteItem(e){
     let li = e.target.closest("li");
     li.remove();
+    updateLocalStorage();
+}
+
+function createList(item){
+    let li = document.createElement("li");
+    let deleteButton  = document.createElement("button");
+    let editButton = document.createElement("button");
+
+    deleteButton.textContent="Delete";
+    editButton.textContent="Edit";
+
+    deleteButton.addEventListener("click",deleteItem);
+    editButton.addEventListener("click",editItem);
+
+
+    li.textContent=item;
+    li.appendChild(deleteButton);
+    li.appendChild(editButton);
+    ul.appendChild(li);
 }
 
 function editItem(event){
@@ -19,7 +45,7 @@ inputField.value= li.firstChild.textContent;
     li.appendChild(inputField);
     li.appendChild(saveButton);
 
-    saveButton.addEventListener("click", function (){
+        saveButton.addEventListener("click", function (){
         let deleteButton = document.createElement("button");
         let editButton = document.createElement("button");
 
@@ -32,7 +58,9 @@ inputField.value= li.firstChild.textContent;
         li.textContent=inputField.value;
         li.appendChild(deleteButton);
         li.appendChild(editButton);
-    })
+            updateLocalStorage();
+
+        })
 }
 
 function addItem(e){
@@ -40,25 +68,19 @@ function addItem(e){
 
     if(input){
 
-        let li = document.createElement("li");
-        let deleteButton  = document.createElement("button");
-        let editButton = document.createElement("button");
-
-        deleteButton.textContent="Delete";
-        editButton.textContent="Edit";
-
-        deleteButton.addEventListener("click",deleteItem);
-        editButton.addEventListener("click",editItem);
-
-
-        li.textContent=input;
-        li.appendChild(deleteButton);
-        li.appendChild(editButton);
-        ul.appendChild(li);
-
+        createList(input)
+        updateLocalStorage();
         document.getElementById("input").value="";
     }
 }
 
-add.addEventListener("click",addItem);
+function updateLocalStorage(){
+    const items=[];
+    ul.querySelectorAll("li").forEach(li=>{
+        items.push({text:li.firstChild.textContent});
+    })
+    localStorage.setItem("items",JSON.stringify(items));
+}
 
+add.addEventListener("click",addItem);
+loadItems();
