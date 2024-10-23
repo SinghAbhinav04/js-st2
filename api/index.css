@@ -1,0 +1,21 @@
+body{
+    background-color: #393838;
+    color: white;
+}
+.movie-div {
+    margin-bottom: 20px;
+}
+
+.movie-image img {
+    width: 200px;
+    height: auto;
+}
+
+.rating {
+    font-weight: bold;
+}
+
+.imdb-url a {
+    color: blue;
+    text-decoration: underline;
+}
